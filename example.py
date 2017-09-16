@@ -40,10 +40,10 @@ bot = InstaBot(
                   ["photo", "picture", "pic", "shot", "snapshot"],
                   ["is", "looks", "feels", "is really"],
                   ["great", "super", "good", "very good", "good", "wow",
-                   "WOW", "cool", "GREAT","magnificent", "magical",
+                   "WOW", "cool", "GREAT", "magnificent", "magical",
                    "very cool", "stylish", "beautiful", "so beautiful",
                    "so stylish", "so professional", "lovely",
-                   "so lovely", "very lovely", "glorious","so glorious",
+                   "so lovely", "very lovely", "glorious", "so glorious",
                    "very glorious", "adorable", "excellent", "amazing"],
                   [".", "..", "...", "!", "!!", "!!!"]],
     # Use unwanted_username_list to block usernames containing a string
