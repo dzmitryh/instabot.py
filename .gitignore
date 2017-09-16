@@ -1,0 +1,9 @@
+# Logs
+*.log
+
+# Python compiled files
+*.pyc
+
+# Idea
+.idea/
+instabot.py.iml
