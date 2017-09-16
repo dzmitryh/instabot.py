@@ -16,7 +16,7 @@ from unfollow_protocol import unfollow_protocol
 username = os.environ['INSTABOT_USERNAME']
 password = os.environ['INSTABOT_PASSWORD']
 tags = os.environ['INSTABOT_TAGS'].split(',')
-log_mode = int(os.getenv('INSTABOT_LOG_MODE'))
+log_mode = int(0 if os.getenv('INSTABOT_LOG_MODE') is None else int(os.getenv('INSTABOT_LOG_MODE')))
 disable_auto_unfollowing = bool(os.getenv('INSTABOT_DISABLE_AUTO_UNFOLLOWING'))
 disable_auto_comments = bool(os.getenv('INSTABOT_DISABLE_AUTO_COMMENTS'))
 # end init variables
