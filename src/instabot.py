@@ -641,7 +641,7 @@ class InstaBot:
                         log_string = "Trying to unfollow # %i " % (
                             self.unfollow_counter + 1)
                         self.write_log(log_string)
-                        self.auto_unfollow()
+                        self.auto_unfollow(f[0])
                         self.bot_follow_list.remove(f)
                         self.next_iteration["Unfollow"] = time.time() + \
                                                           self.add_time(self.unfollow_delay)
@@ -690,10 +690,11 @@ class InstaBot:
                 return True
         return False
 
-    def auto_unfollow(self):
+    def auto_unfollow(self, user_id):
         chooser = 1
         current_user = 'abcd'
-        current_id = '12345'
+        # current_id = '12345'
+        current_id = user_id
         checking = True
         self.media_on_feed = []
         if len(self.media_on_feed) < 1:
@@ -796,7 +797,6 @@ class InstaBot:
 
             if self.is_selebgram is not False or self.is_fake_account is not False or self.is_active_user is not True or self.is_follower is not True:
                 print(current_user)
-                current_id = self.media_on_feed[chooser]['node']["owner"]["id"]
                 self.unfollow(current_id)
                 try:
                     del self.media_on_feed[chooser]
