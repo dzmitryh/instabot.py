@@ -101,6 +101,8 @@ class InstaBot:
     media_on_feed = []
     media_by_user = []
     login_status = False
+    disable_auto_unfollowing = False
+    disable_auto_comments = False
 
     # For new_auto_mod
     next_iteration = {"Like": 0, "Follow": 0, "Unfollow": 0, "Comments": 0}
@@ -108,6 +110,8 @@ class InstaBot:
     def __init__(self,
                  login,
                  password,
+                 disable_auto_unfollowing,
+                 disable_auto_comments,
                  like_per_day=1000,
                  media_max_like=50,
                  media_min_like=0,
@@ -142,6 +146,8 @@ class InstaBot:
         self.unfollow_break_max = unfollow_break_max
         self.user_blacklist = user_blacklist
         self.tag_blacklist = tag_blacklist
+        self.disable_auto_unfollowing = disable_auto_unfollowing
+        self.disable_auto_comments = disable_auto_comments
         self.unfollow_whitelist = unfollow_whitelist
         self.comment_list = comment_list
 
@@ -300,6 +306,7 @@ class InstaBot:
     def cleanup(self, *_):
         # Unfollow all bot follow
         if self.follow_counter >= self.unfollow_counter:
+            self.write_log("Bot follow list size: " + str(len(self.bot_follow_list)))
             for f in self.bot_follow_list:
                 log_string = "Trying to unfollow: %s" % (f[0])
                 self.write_log(log_string)
@@ -310,7 +317,7 @@ class InstaBot:
                     sleeptime, self.unfollow_counter, self.follow_counter)
                 self.write_log(log_string)
                 time.sleep(sleeptime)
-                self.bot_follow_list.remove(f)
+                # self.bot_follow_list.remove(f)
 
         # Logout
         if (self.login_status):
@@ -507,6 +514,11 @@ class InstaBot:
         return False
 
     def unfollow(self, user_id):
+        """ assert on default user """
+        if user_id == '12345':
+            log_string = "User with default id %s used!" % user_id
+            self.write_log(log_string)
+            return False
         """ Send http request to unfollow """
         if self.login_status:
             url_unfollow = self.url_unfollow % (user_id)
@@ -517,9 +529,12 @@ class InstaBot:
                     log_string = "Unfollow: %s #%i." % (user_id,
                                                         self.unfollow_counter)
                     self.write_log(log_string)
-                return unfollow
+                    return unfollow
+                else:
+                    log_string = "Something went wrong while unfollowing user %s" % user_id
+                    self.write_log(log_string)
             except:
-                self.write_log("Exept on unfollow!")
+                self.write_log("Except on unfollow!")
         return False
 
     def unfollow_on_cleanup(self, user_id):
@@ -577,9 +592,11 @@ class InstaBot:
             # ------------------- Follow -------------------
             self.new_auto_mod_follow()
             # ------------------- Unfollow -------------------
-            self.new_auto_mod_unfollow()
+            if not self.disable_auto_unfollowing:
+                self.new_auto_mod_unfollow()
             # ------------------- Comment -------------------
-            self.new_auto_mod_comments()
+            if not self.disable_auto_comments:
+                self.new_auto_mod_comments()
             # Bot iteration in 1 sec
             time.sleep(3)
             # print("Tic!")
@@ -621,7 +638,7 @@ class InstaBot:
             if self.bot_mode == 0:
                 for f in self.bot_follow_list:
                     if time.time() > (f[1] + self.follow_time):
-                        log_string = "Trying to unfollow #%i: " % (
+                        log_string = "Trying to unfollow # %i " % (
                             self.unfollow_counter + 1)
                         self.write_log(log_string)
                         self.auto_unfollow()
@@ -692,10 +709,8 @@ class InstaBot:
                     if wluser == current_user:
                         chooser = random.randint(0,
                                                  len(self.media_on_feed) - 1)
-                        current_id = self.media_on_feed[chooser]['node'][
-                            "owner"]["id"]
-                        current_user = self.media_on_feed[chooser]['node'][
-                            "owner"]["username"]
+                        current_id = self.media_on_feed[chooser]['node']["owner"]["id"]
+                        current_user = self.media_on_feed[chooser]['node']["owner"]["username"]
                         log_string = (
                             "found whitelist user, starting search again")
                         self.write_log(log_string)
@@ -773,7 +788,6 @@ class InstaBot:
                         i += 1
 
                 except:
-                    media_on_feed = []
                     self.write_log("Except on get_info!")
                     time.sleep(20)
                     return 0
@@ -782,6 +796,7 @@ class InstaBot:
 
             if self.is_selebgram is not False or self.is_fake_account is not False or self.is_active_user is not True or self.is_follower is not True:
                 print(current_user)
+                current_id = self.media_on_feed[chooser]['node']["owner"]["id"]
                 self.unfollow(current_id)
                 try:
                     del self.media_on_feed[chooser]

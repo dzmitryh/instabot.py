@@ -16,23 +16,29 @@ from unfollow_protocol import unfollow_protocol
 username = os.environ['INSTABOT_USERNAME']
 password = os.environ['INSTABOT_PASSWORD']
 tags = os.environ['INSTABOT_TAGS'].split(',')
+log_mode = int(os.getenv('INSTABOT_LOG_MODE'))
+disable_auto_unfollowing = bool(os.getenv('INSTABOT_DISABLE_AUTO_UNFOLLOWING'))
+disable_auto_comments = bool(os.getenv('INSTABOT_DISABLE_AUTO_COMMENTS'))
 # end init variables
 
 bot = InstaBot(
     login=username,
     password=password,
+    disable_auto_unfollowing=disable_auto_unfollowing,
+    disable_auto_comments=disable_auto_comments,
+    media_max_like=200,
     like_per_day=1000,
     comments_per_day=0,
     tag_list=tags,
     tag_blacklist=['rain', 'thunderstorm'],
     user_blacklist={},
     max_like_for_one_tag=50,
-    follow_per_day=300,
-    follow_time=1 * 60,
-    unfollow_per_day=300,
+    follow_per_day=1000,
+    follow_time=18000,
+    unfollow_per_day=1000,
     unfollow_break_min=15,
     unfollow_break_max=30,
-    log_mod=0,
+    log_mod=log_mode,
     proxy='',
     # List of list of words, each of which will be used to generate comment
     # For example: "This shot feels wow!"
