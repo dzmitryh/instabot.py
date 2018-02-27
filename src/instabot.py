@@ -108,6 +108,7 @@ class InstaBot:
     media_on_feed = []
     media_by_user = []
     login_status = False
+    disable_auto_following = False
     disable_auto_unfollowing = False
     disable_auto_comments = False
 
@@ -123,6 +124,7 @@ class InstaBot:
     def __init__(self,
                  login,
                  password,
+                 disable_auto_following,
                  disable_auto_unfollowing,
                  disable_auto_comments,
                  like_per_day=1000,
@@ -174,6 +176,7 @@ class InstaBot:
         self.unfollow_break_max = unfollow_break_max
         self.user_blacklist = user_blacklist
         self.tag_blacklist = tag_blacklist
+        self.disable_auto_following = disable_auto_following
         self.disable_auto_unfollowing = disable_auto_unfollowing
         self.disable_auto_comments = disable_auto_comments
         self.unfollow_whitelist = unfollow_whitelist
@@ -709,7 +712,8 @@ class InstaBot:
                 # ------------------- Like -------------------
                 self.new_auto_mod_like()
                 # ------------------- Follow -------------------
-                self.new_auto_mod_follow()
+                if not self.disable_auto_following:
+                    self.new_auto_mod_follow()
                 # ------------------- Unfollow -------------------
                 if not self.disable_auto_unfollowing:
                     self.new_auto_mod_unfollow()
