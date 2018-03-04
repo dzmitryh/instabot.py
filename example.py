@@ -12,11 +12,12 @@ from src.unfollow_protocol import unfollow_protocol
 # begin init variables
 username = os.environ['INSTABOT_USERNAME']
 password = os.environ['INSTABOT_PASSWORD']
-tags = os.environ['INSTABOT_TAGS'].split(',')
-log_mode = int(0 if os.getenv('INSTABOT_LOG_MODE') is None else int(os.getenv('INSTABOT_LOG_MODE')))
 disable_auto_following = bool(os.getenv('INSTABOT_DISABLE_AUTO_FOLLOWING'))
 disable_auto_unfollowing = bool(os.getenv('INSTABOT_DISABLE_AUTO_UNFOLLOWING'))
 disable_auto_comments = bool(os.getenv('INSTABOT_DISABLE_AUTO_COMMENTS'))
+likes_per_day = int(1000 if os.getenv('INSTABOT_LIKES_PER_DAY') is None else int(os.getenv('INSTABOT_LIKES_PER_DAY')))
+tags = os.environ['INSTABOT_TAGS'].split(',')
+log_mode = int(0 if os.getenv('INSTABOT_LOG_MODE') is None else int(os.getenv('INSTABOT_LOG_MODE')))
 # end init variables
 
 bot = InstaBot(
@@ -26,7 +27,7 @@ bot = InstaBot(
     disable_auto_unfollowing=disable_auto_unfollowing,
     disable_auto_comments=disable_auto_comments,
     media_max_like=200,
-    like_per_day=1000,
+    like_per_day=likes_per_day,
     comments_per_day=0,
     tag_list=tags,
     tag_blacklist=['rain', 'thunderstorm'],

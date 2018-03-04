@@ -99,3 +99,7 @@ ENV/
 .idea/
 *.iml
 *.DS_Store
+
+Pipfile
+# Bot db
+*.db
